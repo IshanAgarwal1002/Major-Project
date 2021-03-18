@@ -1,0 +1,32 @@
+const mongoose = require("mongoose");
+
+const OrderSchema = new mongoose.Schema({
+    AWBNo: {
+        type: String,
+        required: true
+    },
+    Origin: {
+        type: String,
+        required:true
+    },
+    Dest: {
+        type: String,
+        required:true
+    },
+    Weight:{
+        type: Number,
+        required:true
+    },
+    ClientName: {
+        type: String,
+        required:true
+    },
+    ClientID:{
+        type: String,
+        required:true
+    }
+});
+
+const Order = mongoose.model("Order", OrderSchema);
+
+module.exports = Order;
