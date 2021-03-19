@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 const OrderSchema = new mongoose.Schema({
     AWBNo: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     Origin: {
         type: String,
@@ -25,6 +26,8 @@ const OrderSchema = new mongoose.Schema({
         type: String,
         required:true
     }
+}, {
+    timestamps:true
 });
 
 const Order = mongoose.model("Order", OrderSchema);
