@@ -13,16 +13,33 @@ module.exports.main = function(req,res){
     //     });
     // });
 
-    Order.find({})
-    .populate("ClientID")
-    .exec(function(err, orders){
-        if(err){ console.log("Error in fetching contacts from db"); return ;}
+    // Order.find({})
+    // .populate("ClientID")
+    // .exec(function(err, orders){
+    //     if(err){ console.log("Error in fetching contacts from db"); return ;}
                 
-        return res.render("home", {
-            title: "Home",
-            Order_List: orders
+    //     return res.render("home", {
+    //         title: "Home",
+    //         Order_List: orders
+    //     });
+    // });
+
+    if(req.user) {
+        User.findOne({_id: req.user._id})
+        .populate("myOrders")
+        .exec(function(err, user_record){
+            if(err){ console.log("Error in fetching contacts from db"); return ;}
+                
+            return res.render("home", {
+                title: "Home",
+                Order_List: user_record.myOrders
+            });
         });
-    });
+    } else {
+        return res.render("home",{
+            title: "Home"
+        });
+    }
 };
 
 module.exports.create = function(req, res){
