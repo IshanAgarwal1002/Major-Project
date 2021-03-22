@@ -18,13 +18,9 @@ const OrderSchema = new mongoose.Schema({
         type: Number,
         required:true
     },
-    ClientName: {
-        type: String,
-        required:true
-    },
     ClientID:{
-        type: String,
-        required:true
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"User"
     }
 }, {
     timestamps:true

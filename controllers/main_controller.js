@@ -1,8 +1,19 @@
 const Order = require("../models/order_schema");
+const User = require("../models/user_schema");
+
 
 module.exports.main = function(req,res){
 
-    Order.find({}, function(err, orders){
+    // Order.find({}, function(err, orders){
+    //     if(err){ console.log("Error in fetching contacts from db"); return ;}
+                
+    //     return res.render("home", {
+    //         title: "Home",
+    //         Order_List: orders
+    //     });
+    // });
+
+    Order.find({}).populate("ClientID").exec(function(err, orders){
         if(err){ console.log("Error in fetching contacts from db"); return ;}
                 
         return res.render("home", {
@@ -14,10 +25,18 @@ module.exports.main = function(req,res){
 
 module.exports.create = function(req, res){
 
-    Order.create(req.body, function(err, newOrder){
+    Order.create({
+        AWBNo: req.body.AWBNo,
+        Origin: req.body.Origin,
+        Dest: req.body.Dest,
+        Weight: req.body.Weight,
+        ClientID: req.user._id
+    }, function(err, newOrder){
         if(err) { console.log("Error in creating the order!"); return;}
 
-        console.log("********", newOrder);
+        // console.log("********", newOrder);
+        req.user.myOrders.push(newOrder);
+        req.user.save();
         return res.redirect("back");
     });
 };

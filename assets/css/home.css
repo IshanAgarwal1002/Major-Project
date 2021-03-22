@@ -28,11 +28,11 @@ body{
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-between;
-    width: 95%;
+    width: 90%;
 }
 
 .order .delete-button{
-    width: 5%;
+    width: 10%;
     text-align: center;
     margin-top: 5px;
 }

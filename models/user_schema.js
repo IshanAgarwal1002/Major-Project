@@ -26,7 +26,13 @@ const userSchema = new mongoose.Schema({
         type: Number,
         required: true,
         unique: true
-    }
+    },
+    myOrders:[
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Order"
+        }
+    ]
 }, {
     timestamps: true
 });

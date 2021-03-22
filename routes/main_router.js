@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
+const passport = require("passport");
 const mainController = require("../controllers/main_controller");
 
 console.log("router loaded");
 
 
 router.get("/", mainController.main);
-router.post("/create-Order", mainController.create);
+router.post("/create-Order", passport.checkAuthentication, mainController.create);
 router.get("/delete-order/", mainController.delete);
 
 
