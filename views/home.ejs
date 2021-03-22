@@ -7,15 +7,16 @@
         <link rel="stylesheet" href="/css/home.css">
     </head>
     <body>
+
+        <!-- only if user is logged in -->
+        <% if(locals.user) { %>
         <h1 id="page-heading">
             <i class="fas fa-arrow-circle-right"></i>
             My Orders List
         </h1>
-
-
+        
+        
         <p>
-            <!-- only if user is logged in -->
-            <% if(locals.user) { %>
         <form id="new-order-form" action="/create-Order" method="POST">
             <input type="text" maxlength="15" name="AWBNo" placeholder="Enter AWB No." required>
             <input type="text" name="Origin" placeholder="Enter Origin" required>
@@ -26,7 +27,7 @@
             
             <button type="submit"> Place Order </button>
         </form>
-            <% } %>
+            
         </p>
 
 
@@ -42,6 +43,8 @@
                             <!-- <p>ClientName: <%= order.ClientName%></p> -->
                             <p>ClientID: <%= order.ClientID.name%></p>
                         </div>
+
+
                         <div class="delete-button">
                             <a href="/delete-order/?id=<%= order._id%>">
                                 <i class="fas fa-window-close"></i>
@@ -51,7 +54,10 @@
                 <%}%> 
             </ul>
         </div>
-
+        <% } else { %>
+            <h1>Welcome</h1>
+            
+        <% } %>
         
 
         <script type="text/javascript" src="/js/home.js"></script>

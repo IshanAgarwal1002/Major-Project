@@ -13,7 +13,9 @@ module.exports.main = function(req,res){
     //     });
     // });
 
-    Order.find({}).populate("ClientID").exec(function(err, orders){
+    Order.find({})
+    .populate("ClientID")
+    .exec(function(err, orders){
         if(err){ console.log("Error in fetching contacts from db"); return ;}
                 
         return res.render("home", {
