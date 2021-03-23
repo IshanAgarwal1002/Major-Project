@@ -8,7 +8,7 @@ console.log("router loaded");
 
 router.get("/", mainController.main);
 router.post("/create-Order", passport.checkAuthentication, mainController.create);
-router.get("/delete-order/", mainController.delete);
+router.get("/delete-order/", passport.checkAuthentication, mainController.delete);
 
 
 router.use("/user",require("./user_router"));

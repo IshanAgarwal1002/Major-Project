@@ -63,12 +63,16 @@ module.exports.create = function(req, res){
 module.exports.delete = function(req, res){
 
     //get the id from the query in the url
-    let id = req.query.id;
+    let order_id = req.query.id;
     
     //find the order in the database using id and delete
-    Order.findByIdAndDelete(id, function(err){
+    Order.findByIdAndDelete(order_id, function(err){
         if(err){ console.log("Error in deleting an object from the database"); return;}
-    
-        return res.redirect("back");
+
+        User.findByIdAndUpdate(req.user._id, { $pull: {myOrders: order_id}}, function(err, user){
+            if(err){ console.log("Error in updating myOrders Array."); return;}
+            
+            return res.redirect("back");
+        });
     });
 };
