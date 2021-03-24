@@ -2,7 +2,7 @@ const Order = require("../models/order_schema");
 const User = require("../models/user_schema");
 
 
-module.exports.main = function(req,res){
+module.exports.main = async function(req,res){
 
     // Order.find({}, function(err, orders){
     //     if(err){ console.log("Error in fetching contacts from db"); return ;}
@@ -24,21 +24,26 @@ module.exports.main = function(req,res){
     //     });
     // });
 
-    if(req.user) {
-        User.findOne({_id: req.user._id})
-        .populate("myOrders")
-        .exec(function(err, user_record){
-            if(err){ console.log("Error in fetching contacts from db"); return ;}
-                
+    try{
+
+        if(req.user) {
+            
+            let user_record = await User.findOne({_id: req.user._id})
+            .populate("myOrders");
+            
             return res.render("home", {
                 title: "Home",
                 Order_List: user_record.myOrders
             });
-        });
-    } else {
-        return res.render("home",{
-            title: "Home"
-        });
+
+        } else {
+            return res.render("home",{
+                title: "Home"
+            });
+        }
+    } catch(err) {
+        console.log("Error: ", err);
+        return;
     }
 };
 
