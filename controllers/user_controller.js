@@ -44,24 +44,32 @@ module.exports.signIn = function(req,res){
 };
 
 //get the sign up data
-module.exports.create = function(req,res){
-    if(req.body.password != req.body.confirm_password){
-        return res.redirect("back");
-    }
+module.exports.create = async function(req,res){
 
-    User.findOne({email:req.body.email}, function(err,user){
-        if(err){ console.log("Error in finding user in signing up"); return;}
+    try{
+
+        if(req.body.password != req.body.confirm_password){
+            req.flash("error", "Passwords do not match!");
+            return res.redirect("back");
+        }
+    
+        let user = await User.findOne({email:req.body.email});
 
         if(!user){
-            User.create(req.body, function(err, user){
-                if(err){ console.log("Error in creating user while signing up"); return;}
+            
+            await User.create(req.body);
+            req.flash("success", "Sign up successful");
+            
+            return res.redirect("/user/sign-in");
 
-                return res.redirect("/user/sign-in");
-            });
         } else {
             return res.redirect("back");
         }
-    });
+
+    } catch(err){
+        console.log("Error in finding user in signing up"); return;
+    }
+    
 };
 
 //get the sign in data
@@ -80,6 +88,8 @@ module.exports.createSession = function(req,res){
 
     //         //handle session creation
     //         res.cookie("user_id", user.id);
+
+    req.flash("success", "Sign in successful");
             return res.redirect("/");
     //     } 
         //handle user not found
@@ -92,5 +102,7 @@ module.exports.createSession = function(req,res){
 module.exports.destroySession = function(req, res){
 
     req.logout();
+    req.flash("success", "You have logged out!");
+
     return res.redirect("/");
 };

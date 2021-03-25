@@ -47,37 +47,47 @@ module.exports.main = async function(req,res){
     }
 };
 
-module.exports.create = function(req, res){
+module.exports.create = async function(req, res){
 
-    Order.create({
-        AWBNo: req.body.AWBNo,
-        Origin: req.body.Origin,
-        Dest: req.body.Dest,
-        Weight: req.body.Weight,
-        ClientID: req.user._id
-    }, function(err, newOrder){
-        if(err) { console.log("Error in creating the order!"); return;}
+    try{
+        let newOrder = await Order.create({
+            AWBNo: req.body.AWBNo,
+            Origin: req.body.Origin,
+            Dest: req.body.Dest,
+            Weight: req.body.Weight,
+            ClientID: req.user._id
+        });
 
-        // console.log("********", newOrder);
         req.user.myOrders.push(newOrder);
         req.user.save();
+
+        req.flash("success", "Order placed successfully!");
         return res.redirect("back");
-    });
+
+    } catch(err){
+        console.log("Error in creating the order!");
+        return;
+    }
 };
 
-module.exports.delete = function(req, res){
+module.exports.delete = async function(req, res){
 
-    //get the id from the query in the url
-    let order_id = req.query.id;
+
+    try{
+
+        //get the id from the query in the url
+        let order_id = req.query.id;
     
-    //find the order in the database using id and delete
-    Order.findByIdAndDelete(order_id, function(err){
-        if(err){ console.log("Error in deleting an object from the database"); return;}
+        //find the order in the database using id and delete it
+        await Order.findByIdAndDelete(order_id);
 
-        User.findByIdAndUpdate(req.user._id, { $pull: {myOrders: order_id}}, function(err, user){
-            if(err){ console.log("Error in updating myOrders Array."); return;}
-            
-            return res.redirect("back");
-        });
-    });
+        await User.findByIdAndUpdate(req.user._id, { $pull: {myOrders: order_id}});
+
+        req.flash("success", "Order deleted successfully!");
+        return res.redirect("back");
+
+    } catch(err){
+        console.log("Error in deleting an object from the database"); 
+        return;
+    }
 };

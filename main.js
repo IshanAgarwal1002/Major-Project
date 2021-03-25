@@ -17,6 +17,8 @@ const passportLocal = require("./config/passport-local-strategy");
 
 const MongoStore = require("connect-mongodb-session")(session);
 
+const flash = require("connect-flash");
+const flashMiddleware = require("./config/flash-middleware");
 
 app.use(express.urlencoded());          //app.use() signifies that this is a middlware
 app.use(express.static("assets"));      // middleware that directs express to include assets (static files)
@@ -58,6 +60,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(passport.setAuthenticatedUser);
+
+app.use(flash());
+app.use(flashMiddleware.setFlash);
 
 //use express router
 app.use("/", require("./routes/main_router"));
